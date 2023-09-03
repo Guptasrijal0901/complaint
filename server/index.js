@@ -8,28 +8,30 @@ app.use(express.json());
 app.post("/create", async(req, res)=>{
   try {
     const newobject = {
-          name:  req.body.name,
-          email:  req.body.email,
-          cranch: req.body.branch,
-          roll: req.body.roll,
-          date: req.body.date,
-          phone: req.body.phone,
-          comp: req.body.comp
+          tabname:  req.body.name,
+          tabemail:  req.body.email,
+          tabbranch: req.body.branch,
+          tabroll: req.body.roll,
+          tabdate: req.body.date,
+          tabphone: req.body.phone,
+          tabcomp: req.body.comp
           }
           const tabledata = new tableModel(newobject);
           await tabledata.save();
           return res .status(100).json({success: true, message: "data saved succesfully"})      
   }
   catch (error) {
-    return res.status(300).json({sucess: false, error: error.message});
+    return res.status(303).json({sucess: false, error: error.message});
   }
   });
+
+  
 //read
 app.get("/read", async (req, res) => {
   try {
-    const compdata = await tableModel.find().sort({createdAt: -1});
+    const tabledata = await tableModel.find().sort({createdAt: -1});
     // console.log(compdata);
-    return res.status(200).json({ success: true, data: compdata });
+    return res.status(200).json({ success: true, data: tabledata });
   } catch (error) {
     return res.status(401).json({ success: false, error: error.message });
   }
@@ -38,7 +40,8 @@ app.get("/read", async (req, res) => {
 //delete
 app.delete("/delete/:id", async (req, res) => {
     try {
-      const deldata = await tableModel.findByIdAndDelete(req.params.id);
+      const tabledelete = await tableModel.findByIdAndDelete(req.params.id);
+      console.log(tabledelete)
       return res.json({
         success: true,
         message: "Table deleted",
@@ -52,19 +55,20 @@ app.delete("/delete/:id", async (req, res) => {
   });
 
 // update
-app.put("/updateart/:id/:arttheme/:arttitle/:artdescription",async(req,res)=>{
+app.put("/update/:comp",async(req,res)=>{
     try {
-      const updatedata =await tableModel.findByIdAndUpdate(req.params.id)
+      const tableupdate =await tableModel.findByIdAndUpdate(req.params.comp)
+      console.log(tableupdate)
       return res.status.json({success:true,message:"Updated Successfully"})
     } catch (error) {
       return res.status(400).json({
-        success:false,error:error.message,
+        success:false, error:error.message,
       });
     }
   })
 
 connectDatabase();
-const PORT = 3000;
+const PORT = 5000;
 app.listen(PORT , async ()=>{
     await console.log(`Server is running at port ${PORT}`);
 })

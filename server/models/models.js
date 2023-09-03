@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const compSchema = new mongoose.Schema(
     {
-        name: String,
-        email: String,
-        branch: String,
-        roll: Number,
-        date: Date,
-        phone: Number,
-        comp: String
+        tabname: String,
+        tabemail: String,
+        tabbranch: String,
+        tabroll: Number,
+        tabdate: Date,
+        tabphone: Number,
+        tabcomp: String
     },
     {timestamps: true}
 )
