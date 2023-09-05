@@ -5,7 +5,7 @@ const tableModel = require ("./models/models")
 app.use(express.json());
 
 // create
-app.post("/create", async(req, res)=>{
+app.post("/api/create", async (req, res)=>{
   try {
     const newobject = {
           tabname:  req.body.name,
@@ -18,21 +18,25 @@ app.post("/create", async(req, res)=>{
           }
           const tabledata = new tableModel(newobject);
           await tabledata.save();
-          return res .status(100).json({success: true, message: "data saved succesfully"})      
+          return res
+          .status(100)
+          .json({success: true, message: "Data saved succesfully"})      
   }
   catch (error) {
+    console.log(error);
     return res.status(303).json({sucess: false, error: error.message});
   }
   });
 
   
 //read
-app.get("/read", async (req, res) => {
+app.get("/api/read", async (req, res) => {
   try {
-    const tabledata = await tableModel.find().sort({createdAt: -1});
+    const data = await tableModel.find().sort({ createdAt: -1 });
     // console.log(compdata);
-    return res.status(200).json({ success: true, data: tabledata });
+    return res.status(200).json({ success: true, data: data });
   } catch (error) {
+    console.log(error);
     return res.status(401).json({ success: false, error: error.message });
   }
 });
@@ -55,9 +59,11 @@ app.delete("/delete/:id", async (req, res) => {
   });
 
 // update
-app.put("/update/:comp",async(req,res)=>{
+app.put("/update/:comp/:id",async(req,res)=>{
     try {
-      const tableupdate =await tableModel.findByIdAndUpdate(req.params.comp)
+      const tableupdate = await tableModel.findByIdAndUpdate(req.params.id, 
+      { comp: req.params.comp
+      })
       console.log(tableupdate)
       return res.status.json({success:true,message:"Updated Successfully"})
     } catch (error) {
@@ -68,7 +74,20 @@ app.put("/update/:comp",async(req,res)=>{
   })
 
 connectDatabase();
-const PORT = 5000;
+// const PORT = 5000;
+const PORT = process.env.PORT || 5000
+
+app.use(express.static("client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname + "/client/build/index.html"),
+      function (err) {
+        if (err) {
+          console.log(err);
+        }
+      }
+);
+});
 app.listen(PORT , async ()=>{
     await console.log(`Server is running at port ${PORT}`);
 })

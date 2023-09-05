@@ -10,3 +10,7 @@ const connectDatabase = async () => {
   }
 };
 module.exports = { connectDatabase };
+
+// for host 
+// we use moongodb atlas 
+// we have to change url  
